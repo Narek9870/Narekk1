@@ -40,7 +40,7 @@ data class DiaryNote(
     val content: String
 )
 
-// ViewModel для работы с файлами (загрузка 1 раз в init, как указано в задании)
+// ViewModel для работы с файлами (загрузка 1 раз в init
 class DiaryViewModel(application: Application) : AndroidViewModel(application) {
     private val context = application.applicationContext
 
@@ -53,7 +53,7 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun loadNotes() {
-        // Получить путь к папке files (СТРОЧКА ИЗ PDF)
+        // Получить путь к папке files
         val filesDir = context.filesDir
         val files = filesDir.listFiles() ?: return
 
@@ -62,7 +62,7 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
             val timestamp = nameParts.getOrNull(0)?.toLongOrNull() ?: return@mapNotNull null
             val title = nameParts.getOrNull(1)?.takeIf { it.isNotBlank() }
 
-            // Прочитать файл (СТРОЧКА ИЗ PDF)
+            // Прочитать файл 
             val content = context.openFileInput(file.name).use {
                 String(it.readBytes())
             }
@@ -83,31 +83,31 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
         val timestamp = System.currentTimeMillis()
         val safeTitle = title.trim().replace("_", " ").replace("/", "")
 
-        // Имя файла — timestamp_[опционально_заголовок].txt (ИЗ PDF)
+        // Имя файла — timestamp_[опционально_заголовок].txt
         val fileName = if (safeTitle.isNotEmpty()) {
             "${timestamp}_${safeTitle}.txt"
         } else {
             "${timestamp}_.txt"
         }
 
-        // Записать файл (СТРОЧКА ИЗ PDF)
+        // Записать файл 
         context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
             it.write(text.toByteArray())
         }
 
         val newNote = DiaryNote(fileName, timestamp, title.takeIf { it.isNotBlank() }, text)
 
-        // При сохранении новой записи — добавлять её вручную в начало списка (ИЗ PDF)
+        // При сохранении новой записи — добавлять её вручную в начало списка 
         notes.add(0, newNote)
     }
 
     fun deleteNote(fileName: String) {
-        // Получить File объект (СТРОЧКА ИЗ PDF)
+        // Получить File объект 
         val file = File(context.filesDir, fileName)
         if (file.exists()) {
             file.delete()
         }
-        // При удалении записи — удалять её из текущего списка по имени файла (ИЗ PDF)
+        // При удалении записи — удалять её из текущего списка по имени файла 
         notes.removeAll { it.fileName == fileName }
     }
 }
@@ -226,7 +226,7 @@ fun DiaryListScreen(
                                     color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
-                                // Показываем только первые 30-40 символов (ИЗ PDF)
+                                // Показываем только первые 30-40 символов
                                 Text(
                                     text = note.content,
                                     maxLines = 2,
